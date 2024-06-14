@@ -1,0 +1,33 @@
+body,
+html {
+    margin: 0;
+    border: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+
+.header {
+    display: flex;
+    background-color: blue;
+    position: sticky;
+    top: 0;
+    height: 15vh;
+}
+
+.book-area {
+    background-color: yellow;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+
+.book-card {
+    background-color: pink;
+    min-width: 300px;
+    max-width: 350px;
+    border-radius: 10px;
+}
