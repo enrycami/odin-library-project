@@ -9,16 +9,37 @@ html {
 }
 
 
+
 .header {
-    display: flex;
-    background-color: blue;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background-color: rgb(255, 248, 220);
     position: sticky;
     top: 0;
     height: 15vh;
+    align-items: center;
+    justify-items: center;
+    gap: 20px;
+}
+
+.header img{
+  width: 40px;
+}
+
+.header button {
+  background-color: rgb(255, 248, 220);
+  border: solid orangered;
+  border-radius: 50px;
+  height: 50px;
+  width: 50px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .book-area {
-    background-color: yellow;
     display: flex;
     flex-wrap: wrap;
     padding: 20px;
@@ -26,7 +47,8 @@ html {
 }
 
 .book-card {
-    background-color: pink;
+    background: linear-gradient(90deg, rgba(255,249,244,1) 0%, rgba(255, 248, 220) 100%);
+    box-shadow: 2px 2px 5px orangered;
     width: 300px;
     border-radius: 20px;
     padding: 10px;

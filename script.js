@@ -60,7 +60,7 @@ function Book(title, author, pages, readStatus, cover){
     this.author = author;
     this.pages = pages;
     this.readStatus = readStatus;
-    this.cover = cover
+    this.cover = cover;
     // this.info = function(){
     //     let infoString = (title + ' by ' + author + ', ' +  pages + ' pages,' + readStatus);
     //     return infoString;
@@ -85,12 +85,15 @@ function displayBooks(){
         // loop over book's property and add their content to html card
         for(let key in myLibrary){
             if (key === 'cover'){
+                console.log("I see a cover property")
                 const cover = document.createElement('img');
-                if (myLibrary[key] = ''){
-                    cover.src = './covers/default';
+                if (myLibrary[key] === ''){
+                    cover.src = './covers/default-cover.jpg';
+                    console.log("hi")
                 } else {
                     cover.src = myLibrary[key];
                 }
+                card.appendChild(cover);
             }else if (key === 'title'){
                 const title = document.createElement('h2');
                 title.textContent= myLibrary[key];
@@ -127,6 +130,6 @@ function appendCardButtons(element){
         </div>';
 }
 
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "394", "false");
-addBookToLibrary('I, Robot', 'Isaac Asimov', '410', 'true');
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "394", "false", '');
+addBookToLibrary('I, Robot', 'Isaac Asimov', '410', 'true','./covers/I, Robot.jpg');
 displayBooks();
