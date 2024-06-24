@@ -7,7 +7,7 @@ const addBookDialog = document.querySelector('#add-book-form');
 const addBookButton = document.querySelector('#add-book')
 const closeAddFormButton = document.querySelector('#close-form');
 const bookForm = document.querySelector('#book-form')
-// const editBookDialog = document.querySelector('#edit-book-form');
+const loadTestDataButton = document.querySelector('#load-test-data');
 
 // shows modal
 showFormButton.addEventListener('click', () =>{
@@ -266,6 +266,17 @@ function appendCardButtons(element){
         </div>';
 }
 
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "394", "false", '');
-addBookToLibrary('I, Robot', 'Isaac Asimov', '410', 'true','./covers/I, Robot.jpg');
+loadTestDataButton.addEventListener('click', () =>{
+    addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "394", "false", '');
+    addBookToLibrary('I, Robot', 'Isaac Asimov', '410', 'true','./covers/I, Robot.jpg');
+    addBookToLibrary('Metro 2033', 'Dmitri Glukhovsky', '1130', 'true', './covers/metro2033.jpg');
+    addBookToLibrary('Eragon', 'Christopher Paolini', '617', 'true', './covers/eragon.jpg');
+    addBookToLibrary('Ender`s game', 'Orson Scott Card', '346', 'true', './covers/endersgame.jpg');
+    addBookToLibrary('House of Cards', 'Michael dobbs', '401', 'false', './covers/houseofcards.jpg')
+    addBookToLibrary('The Da Vinci Code', 'Dan Brown', '456', 'true', './covers/davincicode.jpg');
+    addBookToLibrary('Novecento', 'Alessandro Baricco', '95', 'true', './covers/novecento.jpg');
+    addBookToLibrary('Foundation', 'Isaac Asimov', '249', 'true', './covers/foundation.jpg');
+    displayBooks();
+})
+
 displayBooks();
