@@ -3,20 +3,21 @@ const myLibrary = [];
 
 // select screen elements
 const showFormButton = document.querySelector('#show-form');
-const dialog = document.querySelector('#add-book-form');
+const addBookDialog = document.querySelector('#add-book-form');
 const addBookButton = document.querySelector('#add-book')
-const closeFormButton = document.querySelector('#close-form');
+const closeAddFormButton = document.querySelector('#close-form');
 const bookForm = document.querySelector('#book-form')
+// const editBookDialog = document.querySelector('#edit-book-form');
 
 // shows modal
 showFormButton.addEventListener('click', () =>{
-    dialog.showModal();
+    addBookDialog.showModal();
 })
 
 // close modal 
-closeFormButton.addEventListener('click', () =>{
+closeAddFormButton.addEventListener('click', () =>{
     event.preventDefault();
-    dialog.close();
+    addBookDialog.close();
 })
 
 // function to capitalize the first letter of each word
@@ -29,28 +30,34 @@ function capitalizeEachWord (string){
 }
 
 // add book to library array and display them on screen
-addBookButton.addEventListener('click', () =>{
-    const bookTitleElement = document.querySelector('#book-title');
-    const bookAuthorElement = document.querySelector('#book-author');
-    const bookPagesElement = document.querySelector('#book-pages');
-    const yesReadStatus = document.querySelector('#yes-indicator');
+addBookButton.addEventListener('click', () => {
+    const bookTitleElement = addBookDialog.querySelector('#book-title');
+    const bookAuthorElement = addBookDialog.querySelector('#book-author');
+    const bookPagesElement = addBookDialog.querySelector('#book-pages');
+    const yesReadStatus = addBookDialog.querySelector('#yes-indicator');
+    const bookCover = addBookDialog.querySelector('#book-cover');
 
     const title = capitalizeEachWord(bookTitleElement.value);
     const author = capitalizeEachWord(bookAuthorElement.value);
     let pages = bookPagesElement.value;
+    let cover = bookCover.value;
     
     if (pages === ''){
         pages = '??'
     }
-    let readStatus = false;
+
+    if (cover === ''){
+        cover = '';
+    }
+
+    let readStatus = 'false';
     if (yesReadStatus.checked){
-        readStatus = true;
+        readStatus = 'true';
     }
     
-    console.log(title, author, pages ,readStatus);
-    addBookToLibrary(title, author, pages, readStatus);
+    addBookToLibrary(title, author, pages, readStatus, cover);
     bookForm.reset();
-    dialog.close();
+    addBookDialog.close();
     displayBooks();
 })
 
@@ -77,56 +84,185 @@ function addBookToLibrary(title, author, pages, readStatus, cover) {
 function displayBooks(){
     const bookArea = document.querySelector(".book-area");
     bookArea.textContent = '';
+    let i = 0;
     // loop over array
     myLibrary.forEach(myLibrary => {
         const card = document.createElement("div");
+        let read = false;
         card.classList.add("book-card");
+        card.id = 'book-' + i++;
         bookArea.appendChild(card);
         // loop over book's property and add their content to html card
         for(let key in myLibrary){
             if (key === 'cover'){
-                console.log("I see a cover property")
                 const cover = document.createElement('img');
+                cover.classList.add('book-cover');
+                cover.setAttribute('onerror', 'this.src="./covers/default-cover.jpg";')
+                const imgContainer = document.createElement('div');
+                imgContainer.classList.add('img-container')
                 if (myLibrary[key] === ''){
                     cover.src = './covers/default-cover.jpg';
-                    console.log("hi")
                 } else {
                     cover.src = myLibrary[key];
                 }
-                card.appendChild(cover);
+                imgContainer.appendChild(cover);
+                card.appendChild(imgContainer);
             }else if (key === 'title'){
                 const title = document.createElement('h2');
                 title.textContent= myLibrary[key];
+                title.classList.add('book-title')
                 card.appendChild(title);
             } else if (key === 'author'){
                 const author = document.createElement('p');
                 author.textContent = myLibrary[key];
+                author.classList.add('book-author');
                 card.appendChild(author);
             } else if (key === 'pages'){
                 const pages = document.createElement('p');
                 pages.textContent = 'Total pages: ' + myLibrary[key];
+                pages.classList.add('book-pages');
                 card.appendChild(pages);
             } else if (key === 'readStatus'){
                 const readStatus = document.createElement('p');
-                readStatus.textContent = myLibrary[key];
+                readStatus.classList.add('read-status');
+                if (myLibrary[key] === 'true'){
+                    readStatus.textContent = 'Status: Read';
+                    read = true;
+                } else {
+                    readStatus.textContent = 'Status: Not Read';
+                }
+                readStatus.classList.add('read-status')
                 card.appendChild(readStatus);
             }
         }
+        // add action buttons to each card
         appendCardButtons(card);
+        const toggle = card.querySelector('.toggle-switch');
+        const editButton = card.querySelector('.edit-button');
+        const deleteButton = card.querySelector('.delete-button');
 
+        if (read === true){
+            toggle.checked = true;
+        }
+
+        // event listeners for the action buttons
+        toggle.addEventListener('click', ()=>{
+            const readStatus = card.querySelector('.read-status');
+            if (toggle.checked === true){
+                myLibrary['readStatus'] = 'true';
+                readStatus.textContent = 'Status: Read';
+            } else {
+                myLibrary['readStatus'] = 'false';
+                readStatus.textContent = 'Status: Not Read';
+            }
+        })
+
+        editButton.addEventListener('click', () =>{
+            const editBookDialog = document.createElement('dialog');
+            card.appendChild(editBookDialog);
+            editBookDialog.innerHTML += 
+                '<form id="book-form">\
+                <h2>Edit Book</h2>\
+                <label for="book-title">Title:</label>\
+                <input type="text" id="book-title" placeholder="The Hitchhiker`s Guide To The Galaxy" value="' + card.querySelector('.book-title').textContent + '" required>\
+                <label for="book-author">Author:</label>\
+                <input type="text" id="book-author" placeholder="Douglas Adams" value="' + card.querySelector('.book-author').textContent + '" required>\
+                <label for="book-pages">Pages:</label>\
+                <input type="number" id="book-pages" placeholder="42" min="1" value="' + card.querySelector('.book-pages').textContent.substring(13) + '" required>\
+                <label for="book-cover">Cover:</label>\
+                <input type="text" id="book-cover" value="' + card.querySelector('.book-cover').src + '" placeholder="URL goes here">\
+                <div id="read-checkbox-container">\
+                <span>Have you read this book?</span>\
+                    <div>\
+                        <input type="radio" name="read-status-radio" id="yes-indicator" value="true">\
+                        <label for="yes-indicator">Yes</label>\
+                        <input type="radio" name="read-status-radio" id="no-indicator" value="false" checked>\
+                        <label for="no-indicator">Not yet</label>\
+                    </div>\
+                </div>\
+                <div class="form-buttons">\
+                    <button type="reset" id="clear-form">Clear</button>\
+                    <button type="submit" formmethod="dialog" id="close-form">Cancel</button>\
+                    <button type="submit" formmethod="dialog" id="edit-book">Edit book</button>\
+                </div>\
+            </form>';
+        editBookDialog.showModal();
+        
+        const closeEditFormButton = editBookDialog.querySelector('#close-form');
+        const editFormButton = editBookDialog.querySelector('#edit-book');
+        
+        closeEditFormButton.addEventListener('click', () => {
+            event.preventDefault();
+            editBookDialog.close();
+        })        
+        
+        editFormButton.addEventListener('click', ()=> {
+            const bookTitleElement = editBookDialog.querySelector('#book-title');
+            const bookAuthorElement = editBookDialog.querySelector('#book-author');
+            const bookPagesElement = editBookDialog.querySelector('#book-pages');
+            const yesReadStatus = editBookDialog.querySelector('#yes-indicator');
+            const bookCover = editBookDialog.querySelector('#book-cover');
+
+            const editTitle = capitalizeEachWord(bookTitleElement.value);
+            const editAuthor = capitalizeEachWord(bookAuthorElement.value);
+            let editPages = bookPagesElement.value;
+            let editCover = bookCover.value;
+            
+            if (editPages === ''){
+                editPages = '??'
+            }
+
+            if (editCover === ''){
+                editCover = '';
+            }
+
+            let editReadStatus = 'false';
+            if (yesReadStatus.checked){
+                editReadStatus = 'true';
+            }
+            
+            const currentTitle = card.querySelector('.book-title');
+            const currentAuthor = card.querySelector('.book-author');
+            const currentPages = card.querySelector('.book-pages');
+            const currentReadStatus = card.querySelector('.read-status');
+            const currentCover = card.querySelector('.book-cover')
+
+            currentTitle.textContent = editTitle;
+            currentAuthor.textContent = editAuthor;
+            currentPages.textContent = 'Total pages: ' + editPages;
+            if (editReadStatus === 'true'){
+                currentReadStatus.textContent = 'Status: Read';
+                toggle.checked = true;
+            } else {
+                currentReadStatus.textContent = 'Status: Not Read';
+                toggle.checked = false;
+            }
+            currentCover.src = editCover;
+
+        })
+        })
+
+
+        deleteButton.addEventListener('click', (e) => {
+            if (! confirm('Do you want to delete this book?')){
+                e.preventDefault();
+            } else {
+                card.remove();
+            }
+        })
     })
 }
 
 // function to add buttons to each book card
 function appendCardButtons(element){
     element.innerHTML +=    
-        '<div>\
+        '<div class="book-buttons">\
             <label class="switch">\
-                <input type="checkbox">\
+                <input type="checkbox" class="toggle-switch">\
                 <span class="slider round"></span>\
             </label>\
-            <button>Edit</button>\
-            <button>Delete</button>\
+            <button class="edit-button">Edit</button>\
+            <button class="delete-button">Delete</button>\
         </div>';
 }
 
