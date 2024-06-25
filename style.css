@@ -8,6 +8,20 @@ html {
     box-sizing: border-box;
 }
 
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+  filter: brightness(105%);
+}
+
+button:active {
+  transform: scale(0.95);
+  filter: brightness(90%);
+}
+
 #add-book-form{
   border: none;
   border-radius: 20px;
@@ -107,6 +121,7 @@ html {
 .read-status {
   justify-self: first baseline;
   padding-left: 4px;
+  margin: 0;
 }
 
 .img-container {

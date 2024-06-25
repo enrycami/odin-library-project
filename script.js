@@ -37,8 +37,8 @@ addBookButton.addEventListener('click', () => {
     const yesReadStatus = addBookDialog.querySelector('#yes-indicator');
     const bookCover = addBookDialog.querySelector('#book-cover');
 
-    const title = capitalizeEachWord(bookTitleElement.value);
-    const author = capitalizeEachWord(bookAuthorElement.value);
+    const title = bookTitleElement.value;
+    const author = bookAuthorElement.value;
     let pages = bookPagesElement.value;
     let cover = bookCover.value;
     
@@ -76,7 +76,9 @@ function Book(title, author, pages, readStatus, cover){
 
 // function to add new books to myLibrary array
 function addBookToLibrary(title, author, pages, readStatus, cover) {
-    let book = new Book(title, author, pages, readStatus, cover);
+    const capitalizedTitle = capitalizeEachWord(title);
+    const capitalizedAuthor = capitalizeEachWord(author);
+    let book = new Book(capitalizedTitle, capitalizedAuthor, pages, readStatus, cover);
     myLibrary.push(book)
 }
 
@@ -276,7 +278,6 @@ loadTestDataButton.addEventListener('click', () =>{
     addBookToLibrary('The Da Vinci Code', 'Dan Brown', '456', 'true', './covers/davincicode.jpg');
     addBookToLibrary('Novecento', 'Alessandro Baricco', '95', 'true', './covers/novecento.jpg');
     addBookToLibrary('Foundation', 'Isaac Asimov', '249', 'true', './covers/foundation.jpg');
+    addBookToLibrary('It', 'Stephen King', '1123', 'false', '');
     displayBooks();
 })
-
-displayBooks();
